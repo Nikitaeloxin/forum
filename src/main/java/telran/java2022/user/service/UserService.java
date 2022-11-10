@@ -20,5 +20,7 @@ public interface UserService {
 	
 	RoleDto deleteRole(String login, String role);
 	
+	UserDto getUser(String login);
+	
 	void changePassword(LoginDto loginDto);	
 }

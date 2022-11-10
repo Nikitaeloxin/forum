@@ -25,7 +25,7 @@ public class UserServiceImpl implements UserService {
 
 	@Override
 	public UserDto userRegister(UserRegisterDto userRegisterDto) {
-		if(usersRepository.findById(userRegisterDto.getLogin()).orElse(null)!=null) {
+		if(usersRepository.existsById(userRegisterDto.getLogin())) {
 			throw new UserAlreadyExistException(userRegisterDto.getLogin());
 		}
 		User user = modelMapper.map(userRegisterDto, User.class);
@@ -81,6 +81,12 @@ public class UserServiceImpl implements UserService {
 				.orElseThrow(()->new UserNotFoundException(loginDto.getPassword()));
 		user.setPassword(loginDto.getPassword());
 
+	}
+
+	@Override
+	public UserDto getUser(String login) {
+		User user = usersRepository.findById(login).orElseThrow(()->new UserNotFoundException(login));
+		return modelMapper.map(user, UserDto.class);
 	}
 
 }
