@@ -1,5 +1,6 @@
 package telran.java2022.user.controller;
 
+import java.security.Principal;
 import java.util.Base64;
 
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,14 +33,9 @@ public class UserController {
 	}
 	
 	@PostMapping("/login")
-	UserDto userLogin(@RequestHeader("Authorization") String token) {
-		String[] basicAuth = token.split(" ");
-		System.out.println(basicAuth[0]);
-		System.out.println(basicAuth[1]);
-		String decode = new String(Base64.getDecoder().decode(basicAuth[1]));
-		String[] credentials = decode.split(":");
-		return userService.getUser(credentials[0]);
-	}
+	UserDto userLogin(Principal principal) {
+		return userService.getUser(principal.getName());
+	}	
 	
 	@DeleteMapping("/user/{login}")
 	UserDto userDelete(@PathVariable String login) {
@@ -61,9 +57,9 @@ public class UserController {
 		return userService.deleteRole(login, role);
 	}
 	
-	@PutMapping("/user/password")
-	void changePassword(@RequestBody LoginDto loginDto) {
-		userService.changePassword(loginDto);
+	@PutMapping("/password")
+	void changePassword(Principal principal, @RequestHeader("X-Password") String newPassword) {
+		userService.changePassword(principal.getName(),newPassword);
 	}
 
 }

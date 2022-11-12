@@ -22,5 +22,5 @@ public interface UserService {
 	
 	UserDto getUser(String login);
 	
-	void changePassword(LoginDto loginDto);	
+	void changePassword(String login,String password);	
 }
